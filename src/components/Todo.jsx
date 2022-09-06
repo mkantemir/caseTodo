@@ -1,5 +1,4 @@
-import Box from "@mui/material/Box";
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, TextField, Typography, Box } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -8,27 +7,23 @@ import DoneIcon from "@mui/icons-material/Done";
 import React, { useState } from "react";
 import axios from "axios";
 
-const Todo = ({ todo, todos, setTodos }) => {
+const Todo = ({ todo, todos, setTodos, handleDelete }) => {
   const [toggleEdit, setToggleEdit] = useState(false);
   const [alertTodo, setAlertTodo] = useState(false);
   const [editedValue, setEditedValue] = useState(todo.content);
-
   const endPoint = "https://6311fb42f5cba498da89bb03.mockapi.io/todos";
 
-  const handleCompleted = (todo) => {
+  //tamamlanan todoları güncellemek için yazılan fonsiyondur.
+  const handleCompleted = async (todo) => {
+    todo.isCompleted = !todo.isCompleted;
+    const response = await axios.put(endPoint + "/" + todo.id, todo);
     setTodos(
-      todos.map((item) =>
-        item.id === todo.id ? { ...item, isCompleted: !item.isCompleted } : item
-      )
+      todos.map((item) => (item.id === todo.id ? { ...response.data } : item))
     );
   };
-  const handleDelete = async (todo) => {
-    await axios.delete(endPoint + "/" + todo.id);
-    setTodos(todos.filter((item) => item.id !== todo.id));
-  };
-  const handleOpenEdit = () => {
-    setToggleEdit(!toggleEdit);
-  };
+
+
+  //ilgili todo'yu güncellemek yazılan fonksiyondur. güncel todo en az 3 karakter olmak zorundadır.
   const handleUpdate = async (todo) => {
     if (editedValue.length < 3) {
       setAlertTodo(true);
@@ -87,7 +82,7 @@ const Todo = ({ todo, todos, setTodos }) => {
                 }
               />
             }
-            onClick={() => handleOpenEdit()}
+            onClick={() => setToggleEdit(!toggleEdit)}
           ></Button>
           <Button
             variant="text"

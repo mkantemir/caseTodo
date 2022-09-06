@@ -1,12 +1,17 @@
 import "./App.css";
-import Box from "@mui/material/Box";
-import { Button, InputAdornment, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  InputAdornment,
+  TextField,
+  Typography,
+  Box,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import Todo from "./components/Todo";
-import TextFieldsIcon from "@mui/icons-material/TextFields";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import axios from "axios";
+import TextFieldsIcon from "@mui/icons-material/TextFields";
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -15,6 +20,7 @@ function App() {
   const [name, setName] = useState("");
   const endPoint = "https://6311fb42f5cba498da89bb03.mockapi.io/todos";
 
+  //Api'den datayı almak için kullanılmaktadır.
   useEffect(() => {
     const getTodos = async () => {
       await axios
@@ -29,6 +35,7 @@ function App() {
     getTodos();
   }, []);
 
+  //yeni todo eklemek için yazılan fonksiyondur. yeni todo en az 3 karakter olmak zorundadır.
   const addTodo = async () => {
     if (newTodo.length < 3) {
       setAlertAdd(true);
@@ -41,25 +48,13 @@ function App() {
     }
   };
 
-  const deleteCompleted = async () => {
-    const completedTodoIds = [];
-    todos.map((item) => {
-      if (item.isCompleted) {
-        completedTodoIds.push(item.id);
-      }
-    });
-    await completedTodoIds.map((id) => {
-      axios.delete(endPoint + "/" + id);
-      setTodos(todos.filter((item) => item.id !== id));
-    });
-    // await todos.map((el) => axios.delete(endPoint + "/" + el.id));
-    // todos.filter((item) => console.log(!item.isCompleted));
-    // setTodos(todos.filter((item) => !item.isCompleted));
+  //ilgili todo'yu silmek için yazılan fonksiyondur.
+  const handleDelete = async (todo) => {
+    await axios.delete(endPoint + "/" + todo.id);
+    setTodos(todos.filter((item) => item.id !== todo.id));
   };
+  
 
-  const markAllCompleted = () => {
-    setTodos(todos.map((item) => ({ ...item, isCompleted: true })));
-  };
   return (
     <Box
       sx={{
@@ -135,32 +130,9 @@ function App() {
       </Box>
 
       {todos.map((item) => (
-        <Todo key={item.id} todo={item} todos={todos} setTodos={setTodos} />
+        <Todo key={item.id} todo={item} todos={todos} setTodos={setTodos} handleDelete={handleDelete} />
       ))}
 
-      <Box
-        sx={{
-          width: 700,
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "20px",
-        }}
-      >
-        <Button
-          variant="contained"
-          sx={{ marginRight: "10px", textTransform: "none" }}
-          onClick={markAllCompleted}
-        >
-          Mark All Items Completed
-        </Button>
-        <Button
-          variant="contained"
-          sx={{ marginRight: "10px", textTransform: "none" }}
-          onClick={deleteCompleted}
-        >
-          Delete Completed Items
-        </Button>
-      </Box>
       <Footer />
     </Box>
   );
