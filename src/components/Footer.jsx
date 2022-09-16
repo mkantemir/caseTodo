@@ -1,4 +1,10 @@
-import { Button, Link, Typography } from "@mui/material";
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  Button,
+  Link,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -18,18 +24,24 @@ const Footer = () => {
         paddingTop: "10px",
       }}
     >
-      <Typography sx={{marginLeft:"20px", color:"#1769aa", fontWeight:"bold"}} variant="body1">Metehan KANTEMİR</Typography>
-      <Box >
-        <Button >
+      <Typography
+        sx={{ marginLeft: "20px", color: "#1769aa", fontWeight: "bold" }}
+        variant="body1"
+      >
+        Metehan KANTEMİR
+      </Typography>
+      <Box mr="15px" >
+       <Link sx={{padding:"10px"}} href="https://github.com/mkantemir" target="_blank">
           <GitHubIcon />
-        </Button>
-        <Button>
+        </Link>
+        <Link sx={{padding:"10px"}} href="https://www.linkedin.com/in/metehankantemir/" target="_blank">
           <LinkedInIcon />
-        </Button>
-        <Button>
+        </Link>
+        <Link sx={{padding:"10px"}} href="mailto:metehankantemir@gmail.com" target="_blank">
           <EmailIcon  />
-        </Button>
+        </Link>
       </Box>
+  
     </Box>
   );
 };
